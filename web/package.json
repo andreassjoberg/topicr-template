@@ -1,0 +1,47 @@
+{
+  "name": "topicr",
+  "version": "1.0.0",
+  "description": "",
+  "main": " ",
+  "author": "Andreas Sjöberg",
+  "license": "ISC",
+  "scripts": {
+    "start": "npm-run-all --parallel build:dev lint:watch",
+    "lint": "node_modules/.bin/esw Scripts --ignore-pattern *.bundle.js",
+    "lint:watch": "npm run lint -- --watch",
+    "build:dev": "webpack -d --define process.env.NODE_ENV='\"development\"' --progress --colors --watch",
+    "build:prod": "webpack -p --define process.env.NODE_ENV='\"production\"'",
+    "test": "dotnet xunit",
+    "webpack": "webpack -p --define process.env.NODE_ENV='\"production\"'"
+  },
+  "babel": {
+    "presets": [
+      "es2015",
+      "react"
+    ]
+  },
+  "dependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-core": "^6.24.1",
+    "babel-loader": "^7.0.0",
+    "babel-polyfill": "^6.23.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "es6-promise": "^4.1.0",
+    "expose-loader": "^0.7.3",
+    "react": "^15.5.4",
+    "react-dom": "^15.5.4",
+    "redux": "^3.6.0",
+    "webpack": "^2.5.1"
+  },
+  "devDependencies": {
+    "eslint": "^3.19.0",
+    "eslint-config-prettier": "^2.0.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-prettier": "^2.0.1",
+    "eslint-plugin-react": "^7.0.0",
+    "eslint-watch": "^3.1.0",
+    "npm-run-all": "^4.0.2",
+    "prettier": "^1.3.1"
+  }
+}

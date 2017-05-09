@@ -1,0 +1,37 @@
+﻿{
+    "extends": [
+        "eslint:recommended",
+        "plugin:react/recommended",
+        "prettier",
+        "prettier/react"
+    ],
+    "plugins": [
+        "react",
+        "prettier"
+    ],
+    "parserOptions": {
+        "ecmaVersion": 6,
+        "sourceType": "module",
+        "ecmaFeatures": {
+            "jsx": true
+        }
+    },
+    "env": {
+        "es6": true,
+        "browser": true,
+        "node": true,
+        "jquery": true,
+        "mocha": true
+    },
+    "settings": {
+        "import/resolver": {
+            "node": {
+                "extensions": [ ".js", ".jsx" ]
+            }
+        }
+    },
+    "rules": {
+        "prettier/prettier": "error",
+        "comma-dangle": [ "error", "never" ]
+    }
+}
