@@ -1,5 +1,5 @@
-﻿using System.Linq;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 using topicr.Models;
 
 namespace topicr.Controllers.Api
@@ -18,13 +18,14 @@ namespace topicr.Controllers.Api
         [HttpGet]
         public IActionResult GetTopics()
         {
-            return new JsonResult(_db.Topics
-                                     .Select(p => new
-                                                  {
-                                                      p.Title,
-                                                      p.Description
-                                                  })
-                                     .ToList());
+            return Json(_db.Topics
+                           .Select(p => new
+                                        {
+                                            p.Id,
+                                            p.Title,
+                                            p.Description
+                                        })
+                           .ToList());
         }
     }
 }
