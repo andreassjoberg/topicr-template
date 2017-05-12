@@ -5,7 +5,7 @@ class Topicr extends React.Component {
     render() {
         return (
             <div className="container">
-                <div className="jumbotron">
+                <div className="page-header text-center">
                     <h1>Hello world!</h1>
                 </div>
             </div>
