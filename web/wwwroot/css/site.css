@@ -1,6 +1,5 @@
 ﻿body {
-    padding-top: 40px;
-    padding-bottom: 20px;
+    padding: 40px 10px 20px;
 }
 
 /* Wrapping element */
@@ -15,6 +14,16 @@ input,
 select,
 textarea {
     max-width: 280px;
+}
+
+.form-group {
+    background-color: #f2f2f2;
+    padding: 10px;
+    margin-top: 30px;
+}
+
+.btn {
+    margin-top: 5px;
 }
 
 /* Hide/rearrange for smaller screens */
