@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Linq;
+﻿using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 using topicr.Models;
 
 namespace topicr.Controllers.Api
@@ -26,6 +26,15 @@ namespace topicr.Controllers.Api
                                             p.Description
                                         })
                            .ToList());
+        }
+
+        [HttpPost]
+        [Route("new")]
+        public IActionResult PostTopic(Topic topic)
+        {
+            _db.Topics.Add(topic);
+            _db.SaveChanges();
+            return Ok();
         }
     }
 }

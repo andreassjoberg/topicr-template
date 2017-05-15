@@ -46,12 +46,23 @@ class TopicForm extends React.Component {
         this.setState({ description: event.target.value });
     }
 
+    handleSubmit(event) {
+        event.preventDefault();
+        var title = this.state.title.trim();
+        var description = this.state.description.trim();
+        if (!title || !description) {
+            return;
+        }
+        this.props.onTopicSubmit({ title: title, description: description });
+        this.setState({ title: '', description: '' });
+    }
+
     render() {
         return (
-            <form className="form-group">
+            <form className="form-group" onSubmit={this.handleSubmit.bind(this)}>
                 <h2>Post a new topic</h2>
-                <input className="form-control" type="text" placeholder="title" value={this.state.title} onChange={this.handleTitleChange.bind(this)} />
-                <input className="form-control" type="text" placeholder="description" value={this.state.description} onChange={this.handleDescriptionChange.bind(this)} />
+                <input className="form-control" type="text" placeholder="Title..." value={this.state.title} onChange={this.handleTitleChange.bind(this)} />
+                <input className="form-control" type="text" placeholder="Description..." value={this.state.description} onChange={this.handleDescriptionChange.bind(this)} />
                 <button className="btn btn-lg btn-primary" type="submit">Post topic</button>
             </form>
         );
@@ -78,9 +89,22 @@ class Topicr extends React.Component {
         xhr.send();
     }
 
+    handleTopicSubmit(topic) {
+        var data = new FormData();
+        data.append('title', topic.title);
+        data.append('description', topic.description);
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('post', this.props.submitUrl, true);
+        xhr.onload = function () {
+            this.loadTopicsFromServer();
+        }.bind(this);
+        xhr.send(data);
+    }
+
     componentWillMount() {
         this.loadTopicsFromServer();
-        //window.setInterval(this.loadTopicsFromServer, this.props.pollInterval);
+        //window.setInterval(this.loadTopicsFromServer.bind(this), this.props.pollInterval);
     }
 
     render() {
@@ -92,7 +116,7 @@ class Topicr extends React.Component {
                     </div>
                 </div>
                 <TopicList data={this.state.data} />
-                <TopicForm />
+                <TopicForm onTopicSubmit={this.handleTopicSubmit.bind(this)} />
             </div>
         );
     }
@@ -105,6 +129,6 @@ Topicr.propTypes = {
 }
 
 ReactDOM.render(
-    <Topicr url="/api/topics" pollInterval={2000}/>,
+    <Topicr url="/api/topics" submitUrl="/api/topics/new" pollInterval={2000}/>,
     document.getElementById('content')
 );
