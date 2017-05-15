@@ -16,6 +16,7 @@ namespace topicr.Controllers.Api
         }
 
         [HttpGet]
+        [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult GetTopics()
         {
             return Json(_db.Topics
@@ -33,6 +34,18 @@ namespace topicr.Controllers.Api
         public IActionResult PostTopic(Topic topic)
         {
             _db.Topics.Add(topic);
+            _db.SaveChanges();
+            return Ok();
+        }
+
+        [HttpGet]
+        [Route("clear")]
+        public IActionResult ClearTopics()
+        {
+            foreach (var topic in _db.Topics)
+            {
+                _db.Topics.Remove(topic);
+            }
             _db.SaveChanges();
             return Ok();
         }
