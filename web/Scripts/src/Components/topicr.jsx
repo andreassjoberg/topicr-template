@@ -69,6 +69,27 @@ class TopicForm extends React.Component {
     }
 }
 
+class ClearTopicsForm extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+        };
+    }
+
+    handleSubmit(event) {
+        event.preventDefault();
+        this.props.onClearTopicsSubmit();
+    }
+
+    render() {
+        return (
+            <form className="form-group" onSubmit={this.handleSubmit.bind(this)}>
+                <button className="btn btn-lg btn-primary" type="submit">Clear topics</button>
+            </form>
+        );
+    }
+}
+
 class Topicr extends React.Component {
     constructor(props) {
         super(props);
@@ -96,10 +117,13 @@ class Topicr extends React.Component {
 
         var xhr = new XMLHttpRequest();
         xhr.open('post', this.props.submitUrl, true);
-        xhr.onload = function () {
-            this.loadTopicsFromServer();
-        }.bind(this);
         xhr.send(data);
+    }
+
+    handleClearTopicsSubmit() {
+        var xhr = new XMLHttpRequest();
+        xhr.open('get', this.props.clearUrl, true);
+        xhr.send();
     }
 
     componentWillMount() {
@@ -124,6 +148,7 @@ class Topicr extends React.Component {
                 </div>
                 <TopicList data={this.state.data} />
                 <TopicForm onTopicSubmit={this.handleTopicSubmit.bind(this)} />
+                <ClearTopicsForm onClearTopicsSubmit={this.handleClearTopicsSubmit.bind(this)} />
             </div>
         );
     }
@@ -136,6 +161,6 @@ Topicr.propTypes = {
 }
 
 ReactDOM.render(
-    <Topicr url="/api/topics" submitUrl="/api/topics/new"/>,
+    <Topicr url="/api/topics" submitUrl="/api/topics/new" clearUrl="/api/topics/clear"/>,
     document.getElementById('content')
 );
