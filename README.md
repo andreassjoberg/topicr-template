@@ -13,6 +13,9 @@ To install packages:
     dotnet restore
 ```
 
+You will need to create an empty database and configure the connection string.  
+Run `Update-Database` from the NPM Package Console to create the tables.  
+  
 To run:
 ```
     dotnet run
