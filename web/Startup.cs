@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using topicr.ContractResolvers;
 using topicr.Models;
 
 namespace topicr
@@ -25,9 +27,17 @@ namespace topicr
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // SignalR
+            services.Add(new ServiceDescriptor(typeof(JsonSerializer), provider => JsonSerializer.Create(new JsonSerializerSettings
+                                                                                                         {
+                                                                                                             ContractResolver = new SignalRContractResolver()
+                                                                                                         }), ServiceLifetime.Transient));
+            services.AddSignalR(options => { options.Hubs.EnableDetailedErrors = true; });
+
             // Database
             services.AddDbContext<TopicContext>(options =>
                                                     options.UseSqlServer(Configuration.GetConnectionString("TopicsDatabase")));
+
 
             // Add framework services.
             services.AddMvc();
@@ -57,6 +67,9 @@ namespace topicr
                                            name: "default",
                                            template: "{controller=Home}/{action=Index}/{id?}");
                        });
+
+            app.UseWebSockets();
+            app.UseSignalR();
         }
     }
 }

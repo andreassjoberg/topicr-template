@@ -104,7 +104,14 @@ class Topicr extends React.Component {
 
     componentWillMount() {
         this.loadTopicsFromServer();
-        //window.setInterval(this.loadTopicsFromServer.bind(this), this.props.pollInterval);
+    }
+
+    componentDidMount() {
+        var topicsHub = $.connection.topicsHub;
+        topicsHub.client.refreshTopics = function() {
+            this.loadTopicsFromServer();
+        }.bind(this);
+        $.connection.hub.start();
     }
 
     render() {
@@ -129,6 +136,6 @@ Topicr.propTypes = {
 }
 
 ReactDOM.render(
-    <Topicr url="/api/topics" submitUrl="/api/topics/new" pollInterval={2000}/>,
+    <Topicr url="/api/topics" submitUrl="/api/topics/new"/>,
     document.getElementById('content')
 );

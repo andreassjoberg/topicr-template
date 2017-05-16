@@ -1,5 +1,7 @@
 ﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR.Infrastructure;
+using topicr.Hubs;
 using topicr.Models;
 
 namespace topicr.Controllers.Api
@@ -9,10 +11,12 @@ namespace topicr.Controllers.Api
     public class TopicController : Controller
     {
         private readonly TopicContext _db;
+        private readonly IConnectionManager _connectionManager;
 
-        public TopicController(TopicContext db)
+        public TopicController(TopicContext db, IConnectionManager connectionManager)
         {
             _db = db;
+            _connectionManager = connectionManager;
         }
 
         [HttpGet]
@@ -35,6 +39,7 @@ namespace topicr.Controllers.Api
         {
             _db.Topics.Add(topic);
             _db.SaveChanges();
+            _connectionManager.GetHubContext<TopicsHub>().Clients.All.refreshTopics();
             return Ok();
         }
 
@@ -47,6 +52,7 @@ namespace topicr.Controllers.Api
                 _db.Topics.Remove(topic);
             }
             _db.SaveChanges();
+            _connectionManager.GetHubContext<TopicsHub>().Clients.All.refreshTopics();
             return Ok();
         }
     }

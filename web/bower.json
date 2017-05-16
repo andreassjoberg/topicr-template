@@ -5,7 +5,8 @@
     "bootstrap": "v4.0.0-alpha.6",
     "jquery": "3.2.1",
     "jquery-validation": "1.16.0",
-    "jquery-validation-unobtrusive": "3.2.6"
+    "jquery-validation-unobtrusive": "3.2.6",
+    "signalr": "v2.2.2"
   },
   "resolutions": {
     "jquery-validation": "1.16.0",
