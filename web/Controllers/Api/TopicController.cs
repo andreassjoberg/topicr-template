@@ -35,7 +35,7 @@ namespace topicr.Controllers.Api
 
         [HttpPost]
         [Route("new")]
-        public IActionResult PostTopic(Topic topic)
+        public IActionResult PostTopic([FromBody] Topic topic)
         {
             _db.Topics.Add(topic);
             _db.SaveChanges();

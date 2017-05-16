@@ -54,10 +54,7 @@ class TopicForm extends React.Component {
         if (!title || !description) {
             return;
         }
-        var data = new FormData();
-        data.append('title', title);
-        data.append('description', description);
-        this.props.onTopicSubmit(data);
+        this.props.onTopicSubmit({ title: title, description: description });
         this.setState({ title: '', description: '' });
     }
 
@@ -116,8 +113,8 @@ class Topicr extends React.Component {
             });
     }
 
-    handleTopicSubmit(formData) {
-        axios.post(this.props.submitUrl, formData)
+    handleTopicSubmit(topic) {
+        axios.post(this.props.submitUrl, topic)
             .then(function(response) {
                 if (response.status === 200) {
                     // Ok
