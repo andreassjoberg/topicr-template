@@ -56,13 +56,14 @@ class TopicForm extends React.Component {
         }
         this.props.onTopicSubmit({ title: title, description: description });
         this.setState({ title: '', description: '' });
+        this.refs.input_title.focus();
     }
 
     render() {
         return (
             <form className="form-group" onSubmit={this.handleSubmit.bind(this)}>
                 <h2>Post a new topic</h2>
-                <input className="form-control" type="text" placeholder="Title..." value={this.state.title} onChange={this.handleTitleChange.bind(this)} />
+                <input className="form-control" type="text" placeholder="Title..." value={this.state.title} onChange={this.handleTitleChange.bind(this)} ref="input_title" />
                 <input className="form-control" type="text" placeholder="Description..." value={this.state.description} onChange={this.handleDescriptionChange.bind(this)} />
                 <button className="btn btn-lg btn-primary" type="submit">Post topic</button>
             </form>
@@ -128,7 +129,7 @@ class Topicr extends React.Component {
     }
 
     handleClearTopicsSubmit() {
-        axios.get(this.props.clearUrl)
+        axios.post(this.props.clearUrl)
             .then(function(response) {
                 if (response.status === 200) {
                     // Ok

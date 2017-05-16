@@ -43,7 +43,7 @@ namespace topicr.Controllers.Api
             return Ok();
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route("clear")]
         public IActionResult ClearTopics()
         {
