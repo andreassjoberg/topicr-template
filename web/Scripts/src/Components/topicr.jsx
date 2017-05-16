@@ -1,6 +1,7 @@
 ﻿import React from 'react';
 import { render } from 'react-dom';
 import PropTypes from 'prop-types';
+import axios from 'axios';
 
 class TopicList extends React.Component {
     render() {
@@ -53,7 +54,10 @@ class TopicForm extends React.Component {
         if (!title || !description) {
             return;
         }
-        this.props.onTopicSubmit({ title: title, description: description });
+        var data = new FormData();
+        data.append('title', title);
+        data.append('description', description);
+        this.props.onTopicSubmit(data);
         this.setState({ title: '', description: '' });
     }
 
@@ -99,31 +103,45 @@ class Topicr extends React.Component {
     }
 
     loadTopicsFromServer() {
-        var xhr = new XMLHttpRequest();
-        xhr.open('get', this.props.url, true);
-        xhr.onload = function () {
-            var data = JSON.parse(xhr.responseText);
-            this.setState(prevState => (
-                { data: data }
-            ));
-        }.bind(this);
-        xhr.send();
+        axios.get(this.props.url)
+            .then(function (response) {
+                if (response.status === 200) {
+                    this.setState(prevState => ({ data: response.data }));
+                } else {
+                    console.log(response.status);
+                }
+            }.bind(this))
+            .catch(function(error) {
+                console.log(error);
+            });
     }
 
-    handleTopicSubmit(topic) {
-        var data = new FormData();
-        data.append('title', topic.title);
-        data.append('description', topic.description);
-
-        var xhr = new XMLHttpRequest();
-        xhr.open('post', this.props.submitUrl, true);
-        xhr.send(data);
+    handleTopicSubmit(formData) {
+        axios.post(this.props.submitUrl, formData)
+            .then(function(response) {
+                if (response.status === 200) {
+                    // Ok
+                } else {
+                    console.log(response.status);
+                }
+            })
+            .catch(function(error) {
+                console.log(error);
+            });
     }
 
     handleClearTopicsSubmit() {
-        var xhr = new XMLHttpRequest();
-        xhr.open('get', this.props.clearUrl, true);
-        xhr.send();
+        axios.get(this.props.clearUrl)
+            .then(function(response) {
+                if (response.status === 200) {
+                    // Ok
+                } else {
+                    console.log(response.status);
+                }
+            }.bind(this))
+            .catch(function(error) {
+                console.log(error);
+            });
     }
 
     componentWillMount() {
