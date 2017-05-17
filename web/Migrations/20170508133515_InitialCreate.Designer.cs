@@ -7,7 +7,7 @@ using topicr.Models;
 
 namespace topicr.Migrations
 {
-    [DbContext(typeof(TopicContext))]
+    [DbContext(typeof(PollContext))]
     [Migration("20170508133515_InitialCreate")]
     partial class InitialCreate
     {

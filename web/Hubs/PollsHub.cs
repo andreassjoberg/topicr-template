@@ -2,7 +2,7 @@
 
 namespace topicr.Hubs
 {
-    public class TopicsHub : Hub
+    public class PollsHub : Hub
     {
     }
 }

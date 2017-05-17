@@ -8,9 +8,10 @@ using topicr.Models;
 namespace topicr.Migrations
 {
     [DbContext(typeof(PollContext))]
-    partial class TopicContextModelSnapshot : ModelSnapshot
+    [Migration("20170517054932_PollLink")]
+    partial class PollLink
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2")

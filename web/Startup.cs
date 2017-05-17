@@ -35,8 +35,8 @@ namespace topicr
             services.AddSignalR(options => { options.Hubs.EnableDetailedErrors = true; });
 
             // Database
-            services.AddDbContext<TopicContext>(options =>
-                                                    options.UseSqlServer(Configuration.GetConnectionString("TopicsDatabase")));
+            services.AddDbContext<PollContext>(options =>
+                                                    options.UseSqlServer(Configuration.GetConnectionString("PollsDatabase")));
 
 
             // Add framework services.

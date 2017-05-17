@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace topicr.Models
 {
-    public class Topic
+    public class Poll
     {
-        public Topic()
+        public Poll()
         {
             CreatedDateTime = DateTime.Now;
         }
@@ -13,8 +13,9 @@ namespace topicr.Models
         public int Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
+        public string Link { get; set; }
         public DateTime CreatedDateTime { get; set; }
 
-        public virtual ICollection<Post> Posts { get; set; }
+        public virtual ICollection<Alternative> Alternatives { get; set; }
     }
 }
