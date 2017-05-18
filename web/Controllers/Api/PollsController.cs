@@ -1,6 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 using topicr.Hubs;
 using topicr.Models;
 
@@ -8,12 +11,12 @@ namespace topicr.Controllers.Api
 {
     [Produces("application/json")]
     [Route("api/[controller]")]
-    public class PollController : Controller
+    public class PollsController : Controller
     {
         private readonly PollContext _db;
         private readonly IConnectionManager _connectionManager;
 
-        public PollController(PollContext db, IConnectionManager connectionManager)
+        public PollsController(PollContext db, IConnectionManager connectionManager)
         {
             _db = db;
             _connectionManager = connectionManager;
@@ -29,6 +32,7 @@ namespace topicr.Controllers.Api
                                             p.Id,
                                             p.Title,
                                             p.Description,
+                                            p.Link,
                                             Alternatives = p.Alternatives
                                                             .Select(a => new
                                                                          {
@@ -40,10 +44,45 @@ namespace topicr.Controllers.Api
                            .ToList());
         }
 
+        [HttpGet]
+        [Route("{link}")]
+        [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult GetPoll(string link)
+        {
+            var poll = _db.Polls
+                          .Include(p => p.Alternatives)
+                          .SingleOrDefault(p => p.Link.Equals(link));
+            return Json(new
+                        {
+                            poll?.Id,
+                            poll?.Title,
+                            poll?.Description,
+                            poll?.Link,
+                            Alternatives = poll?.Alternatives?
+                                               .Select(a => new
+                                                            {
+                                                                a.Id,
+                                                                a.Description
+                                                            })
+                                               .ToList()
+                        });
+        }
+
         [HttpPost]
         [Route("new")]
-        public IActionResult PostTopic([FromBody] Poll poll)
+        public IActionResult PostPoll([FromBody] Poll poll)
         {
+            string link;
+            do
+            {
+                link = Convert.ToBase64String(Encoding.UTF8.GetBytes(Guid.NewGuid()
+                                                                         .ToString()
+                                                                         .Replace("=", "")
+                                                                         .Replace("+", "")
+                                                                         .Substring(0, 12)));
+            } while (!_db.Polls.Any(p => p.Link.Equals(link)));
+
+            poll.Link = link;
             _db.Polls.Add(poll);
             _db.SaveChanges();
             _connectionManager.GetHubContext<PollsHub>().Clients.All.refreshTopics();
