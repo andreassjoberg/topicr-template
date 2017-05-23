@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="Scripts\src\Components\pollForm.jsx" />
     <Content Include="Scripts\src\Components\pollSelectForm.jsx" />
     <Content Include="Scripts\src\Components\pollr.jsx" />
     <Content Include="wwwroot\js\client.bundle.js" />

@@ -52,6 +52,10 @@ namespace topicr.Controllers.Api
             var poll = _db.Polls
                           .Include(p => p.Alternatives)
                           .SingleOrDefault(p => p.Link.Equals(link));
+            if (poll == null)
+            {
+                return NotFound();
+            }
             return Json(new
                         {
                             poll?.Id,

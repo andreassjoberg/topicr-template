@@ -31,7 +31,7 @@ class PollSelectForm extends React.Component {
 
         return (
             <div>
-                <form className="form-group" onSubmit={this.handleSubmit.bind(this)}>
+                <form className="form-group max-400" onSubmit={this.handleSubmit.bind(this)}>
                     <h2>Enter form link</h2>
                     <input className="form-control" type="text" placeholder="Poll link..." value={this.state.link} onChange={this.handleLinkChanged.bind(this)} autoFocus />
                     <button className="btn btn-lg btn-primary" type="submit">Go to poll</button>
