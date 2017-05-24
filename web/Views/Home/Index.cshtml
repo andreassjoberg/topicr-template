@@ -13,6 +13,13 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="~/lib/signalr/jquery.signalR.min.js"></script>
     <script src="~/signalr/hubs"></script>
+    
+    @if (!string.IsNullOrWhiteSpace(ViewBag?.Link))
+    {
+        <script type="text/javascript">
+            sessionStorage['pollLink'] = '@ViewBag.Link';
+        </script>
+    }
 
     <script src="@Url.Content("~/js/client.bundle.js")"></script>
 </body>
