@@ -2,8 +2,10 @@
 import { render } from 'react-dom';
 import PropTypes from 'prop-types';
 import axios from 'axios';
+import randomstring from 'randomstring';
 import PollForm from './pollForm';
 import PollSelectForm from './pollSelectForm';
+import PollChart from './pollChart';
 
 class Pollr extends React.Component {
     constructor(props) {
@@ -15,35 +17,54 @@ class Pollr extends React.Component {
         };
     }
 
-    loadPollFromServer() {
-        if (!this.state.link) {
-            return;
-        }
-    }
-
-    handleSelectFormSubmit(link) {
-        axios.get(this.props.url + "/" + link)
+    loadLinkData(link) {
+        axios.get(this.props.url + '/' + link)
             .then(response => {
                 if (response.status === 200) {
-                    sessionStorage["pollLink"] = link;
+                    sessionStorage['pollLink'] = link;
                     this.setState({ isLoggedIn: true, pollData: response.data });
                 } else {
-                    console.log(response.status);
+                    console.error(response.status);
                 }
             })
             .catch(error => {
-                console.log(error);
+                console.error(error);
             });
     }
 
+    handleSelectFormSubmit(link) {
+        this.loadLinkData(link);
+    }
+
+    handleVote(link, alternativeId) {
+        if (!localStorage['userName']) {
+            console.error('No username set!');
+            return;
+        }
+        var userName = localStorage['userName'];
+        axios.post(this.props.url + '/' + link + '/vote/' + alternativeId + '/user/' + userName)
+            .then(response => {
+                    if (response.status === 200) {
+                        this.loadLinkData(link);
+                    } else {
+                        console.error(response.status);
+                    }
+                })
+            .catch(error => {
+                    console.error(error);
+                });
+    }
+
     componentWillMount() {
-        if (sessionStorage["pollLink"]) {
-            this.handleSelectFormSubmit(sessionStorage["pollLink"]);
+        if (!localStorage['userName']) {
+            localStorage['userName'] = randomstring.generate({ length: 10, charset: 'alphanumeric' });
+        }
+        if (sessionStorage['pollLink']) {
+            this.loadLinkData(sessionStorage['pollLink']);
         }
     }
 
     render() {
-        const link = this.state.link;
         return (
             <div className="topicr">
                 <div className="container">
@@ -52,8 +73,9 @@ class Pollr extends React.Component {
                         Cheat sheet: MWRlYTgzMzMtMWRj
                     </div>
                 </div>
-                <PollForm pollData={this.state.pollData}/>
+                <PollForm pollData={this.state.pollData} onVote={this.handleVote.bind(this)}/>
                 <PollSelectForm isLoggedIn={this.state.isLoggedIn} onSubmit={this.handleSelectFormSubmit.bind(this)}/>
+                <PollChart pollData={this.state.pollData}/>
             </div>
         );
     }

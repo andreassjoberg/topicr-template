@@ -50,26 +50,56 @@ namespace topicr.Controllers.Api
         public IActionResult GetPoll(string link)
         {
             var poll = _db.Polls
-                          .Include(p => p.Alternatives)
                           .SingleOrDefault(p => p.Link.Equals(link));
             if (poll == null)
             {
                 return NotFound();
             }
+            var alternatives = _db.Alternatives
+                                  .Where(p => p.PollId == poll.Id)
+                                  .Include(p => p.Replies)
+                                  .ToList();
+
             return Json(new
                         {
                             poll?.Id,
                             poll?.Title,
                             poll?.Description,
                             poll?.Link,
-                            Alternatives = poll?.Alternatives?
+                            Alternatives = alternatives?
                                                .Select(a => new
                                                             {
                                                                 a.Id,
-                                                                a.Description
+                                                                a.Description,
+                                                                Votes = a.Replies.Count
                                                             })
                                                .ToList()
                         });
+        }
+
+        [HttpPost]
+        [Route("{link}/vote/{alternative:int}/user/{user}")]
+        public IActionResult PostVote(string link, int alternative, string user)
+        {
+            var poll = _db.Polls
+                        .SingleOrDefault(p => p.Link.Equals(link));
+            if (poll == null)
+            {
+                return NotFound();
+            }
+            var alt = _db.Alternatives
+                         .SingleOrDefault(p => p.PollId == poll.Id && p.Id == alternative);
+            if (alt == null)
+            {
+                return NotFound();
+            }
+            _db.Replies.Add(new Reply
+                            {
+                                AlternativeId = alt.Id,
+                                UserId = user
+                            });
+            _db.SaveChanges();
+            return Ok();
         }
 
         [HttpPost]

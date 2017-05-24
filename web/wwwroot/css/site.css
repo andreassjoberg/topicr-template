@@ -18,10 +18,13 @@ textarea {
 }
 
 .form-group {
-    background-color: #f2f2f2;
     padding: 20px;
     margin: 30px auto 0;
     text-align: center;
+}
+
+.light-gray {
+    background-color: #f2f2f2;
 }
 
 .max-400 {

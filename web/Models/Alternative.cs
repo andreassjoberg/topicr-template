@@ -1,4 +1,6 @@
-﻿namespace topicr.Models
+﻿using System.Collections.Generic;
+
+namespace topicr.Models
 {
     public class Alternative
     {
@@ -7,5 +9,7 @@
 
         public int PollId { get; set; }
         public virtual Poll Poll { get; set; }
+
+        public virtual ICollection<Reply> Replies { get; set; }
     }
 }
