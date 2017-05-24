@@ -31,6 +31,10 @@
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="1.0.0-msbuild3-final" />
   </ItemGroup>
+    
+  <ItemGroup>
+    <Folder Include="wwwroot\images\" />
+  </ItemGroup>
 
 
 </Project>

@@ -63,9 +63,8 @@ namespace topicr
 
             app.UseMvc(routes =>
                        {
-                           routes.MapRoute(
-                                           name: "default",
-                                           template: "{controller=Home}/{action=Index}/{id?}");
+                           routes.MapRoute("default", "{controller=Home}/{action=Index}");
+                           routes.MapRoute("poll", "{link}", new { controller = "Home", action = "Index" });
                        });
 
             app.UseWebSockets();

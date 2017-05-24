@@ -99,6 +99,7 @@ namespace topicr.Controllers.Api
                                 UserId = user
                             });
             _db.SaveChanges();
+            _connectionManager.GetHubContext<PollsHub>().Clients.All.refreshPolls();
             return Ok();
         }
 
@@ -119,20 +120,20 @@ namespace topicr.Controllers.Api
             poll.Link = link;
             _db.Polls.Add(poll);
             _db.SaveChanges();
-            _connectionManager.GetHubContext<PollsHub>().Clients.All.refreshTopics();
             return Ok();
         }
 
         [HttpPost]
-        [Route("clear")]
-        public IActionResult ClearPolls()
+        [Route("{link}/clear")]
+        public IActionResult ClearVotes(string link)
         {
-            foreach (var topic in _db.Polls)
+            foreach (var reply in _db.Replies
+                .Where(p => p.Alternative.Poll.Link.Equals(link)))
             {
-                _db.Polls.Remove(topic);
+                _db.Replies.Remove(reply);
             }
             _db.SaveChanges();
-            _connectionManager.GetHubContext<PollsHub>().Clients.All.refreshTopics();
+            _connectionManager.GetHubContext<PollsHub>().Clients.All.refreshPolls();
             return Ok();
         }
     }

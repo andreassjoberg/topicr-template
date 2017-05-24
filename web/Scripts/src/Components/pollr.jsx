@@ -18,6 +18,9 @@ class Pollr extends React.Component {
     }
 
     loadLinkData(link) {
+        if (!link) {
+            return;
+        }
         axios.get(this.props.url + '/' + link)
             .then(response => {
                 if (response.status === 200) {
@@ -62,6 +65,14 @@ class Pollr extends React.Component {
         if (sessionStorage['pollLink']) {
             this.loadLinkData(sessionStorage['pollLink']);
         }
+    }
+
+    componentDidMount() {
+        var pollsHub = $.connection.pollsHub;
+        pollsHub.client.refreshPolls = () => {
+            this.loadLinkData(sessionStorage['pollLink']);
+        };
+        $.connection.hub.start();
     }
 
     render() {
