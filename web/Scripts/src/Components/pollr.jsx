@@ -1,8 +1,8 @@
 ﻿import React from 'react';
 import { render } from 'react-dom';
 import PropTypes from 'prop-types';
-import axios from 'axios';
-import randomstring from 'randomstring';
+import Axios from 'axios';
+import Randomstring from 'randomstring';
 import PollForm from './pollForm';
 import PollSelectForm from './pollSelectForm';
 import PollChart from './pollChart';
@@ -13,7 +13,10 @@ class Pollr extends React.Component {
         this.state = {
             link: '',
             isLoggedIn: false,
-            pollData: {}
+            pollData: {},
+            alertMessage: '',
+            infoMessage: '',
+            hasVoted: false
         };
     }
 
@@ -21,17 +24,15 @@ class Pollr extends React.Component {
         if (!link) {
             return;
         }
-        axios.get(this.props.url + '/' + link)
+        this.setState({ alertMessage: '' });
+        var userName = localStorage['userName'];
+        Axios.get(this.props.url + '/' + link + '/user/' + userName)
             .then(response => {
-                if (response.status === 200) {
-                    sessionStorage['pollLink'] = link;
-                    this.setState({ isLoggedIn: true, pollData: response.data });
-                } else {
-                    console.error(response.status);
-                }
+                sessionStorage['pollLink'] = link;
+                this.setState({ isLoggedIn: true, pollData: response.data, hasVoted: response.data.hasVoted });
             })
-            .catch(error => {
-                console.error(error);
+            .catch(() => {
+                this.setState({ alertMessage: 'No poll found for given link.' });
             });
     }
 
@@ -45,22 +46,28 @@ class Pollr extends React.Component {
             return;
         }
         var userName = localStorage['userName'];
-        axios.post(this.props.url + '/' + link + '/vote/' + alternativeId + '/user/' + userName)
-            .then(response => {
-                    if (response.status === 200) {
-                        this.loadLinkData(link);
-                    } else {
-                        console.error(response.status);
-                    }
-                })
+        Axios.post(this.props.url + '/' + link + '/vote/' + alternativeId + '/user/' + userName)
+            .then(() => {
+                this.setState({ infoMessage: 'Thanks for your vote!' });
+                this.loadLinkData(link);
+            })
             .catch(error => {
-                    console.error(error);
-                });
+                if (error.response.status === 401) {
+                    this.setState({ alertMessage: error.response.data.message });
+                } else {
+                    this.setState({ alertMessage: 'Unexpected error while voting: ' + error.response.status });
+                }
+            });
+    }
+
+    resetPollLink() {
+        sessionStorage.removeItem('pollLink');
+        window.location.assign('/');
     }
 
     componentWillMount() {
         if (!localStorage['userName']) {
-            localStorage['userName'] = randomstring.generate({ length: 10, charset: 'alphanumeric' });
+            localStorage['userName'] = Randomstring.generate({ length: 10, charset: 'alphanumeric' });
         }
         if (sessionStorage['pollLink']) {
             this.loadLinkData(sessionStorage['pollLink']);
@@ -80,12 +87,26 @@ class Pollr extends React.Component {
             <div className="topicr">
                 <div className="container">
                     <div className="page-header text-center">
-                        <h1>Pollr</h1>
+                        <h1><a href='/'>Pollr</a></h1>
                         Cheat sheet: MWRlYTgzMzMtMWRj
+                        <p>
+                            <a href='javascript:void(0);' onClick={() => this.resetPollLink()}>Select another poll</a>
+                        </p>
                     </div>
                 </div>
-                <PollForm pollData={this.state.pollData} onVote={this.handleVote.bind(this)}/>
-                <PollSelectForm isLoggedIn={this.state.isLoggedIn} onSubmit={this.handleSelectFormSubmit.bind(this)}/>
+                { this.state.alertMessage ? 
+                    <div className="alert alert-danger" role="alert">{this.state.alertMessage}</div>
+                    : null
+                }
+                {this.state.infoMessage ?
+                    <div className="alert alert-success" role="alert">{this.state.infoMessage}</div>
+                    : null
+                }
+                { this.state.hasVoted ?
+                    null : 
+                    <PollForm pollData={this.state.pollData} onVote={(link, alternativeId) => this.handleVote(link, alternativeId)} />
+                }
+                <PollSelectForm isLoggedIn={this.state.isLoggedIn} onSubmit={link => this.handleSelectFormSubmit(link)}/>
                 <PollChart pollData={this.state.pollData}/>
             </div>
         );

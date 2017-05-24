@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using System.Text;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR.Infrastructure;
 using Microsoft.EntityFrameworkCore;
@@ -23,34 +23,12 @@ namespace topicr.Controllers.Api
         }
 
         [HttpGet]
+        [Route("{link}/user/{user}")]
         [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Get()
-        {
-            return Json(_db.Polls
-                           .Select(p => new
-                                        {
-                                            p.Id,
-                                            p.Title,
-                                            p.Description,
-                                            p.Link,
-                                            Alternatives = p.Alternatives
-                                                            .Select(a => new
-                                                                         {
-                                                                             a.Id,
-                                                                             a.Description
-                                                                         })
-                                                            .ToList()
-                                        })
-                           .ToList());
-        }
-
-        [HttpGet]
-        [Route("{link}")]
-        [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult GetPoll(string link)
+        public IActionResult GetPoll(string link, string user)
         {
             var poll = _db.Polls
-                          .SingleOrDefault(p => p.Link.Equals(link));
+                          .SingleOrDefault(p => p.Link.Equals(link, StringComparison.Ordinal));
             if (poll == null)
             {
                 return NotFound();
@@ -59,21 +37,22 @@ namespace topicr.Controllers.Api
                                   .Where(p => p.PollId == poll.Id)
                                   .Include(p => p.Replies)
                                   .ToList();
-
+            var hasVoted = HasVoted(poll.Id, user);
             return Json(new
                         {
-                            poll?.Id,
-                            poll?.Title,
-                            poll?.Description,
-                            poll?.Link,
+                            poll.Id,
+                            poll.Title,
+                            poll.Description,
+                            poll.Link,
+                            HasVoted = hasVoted,
                             Alternatives = alternatives?
-                                               .Select(a => new
-                                                            {
-                                                                a.Id,
-                                                                a.Description,
-                                                                Votes = a.Replies.Count
-                                                            })
-                                               .ToList()
+                                .Select(a => new
+                                             {
+                                                 a.Id,
+                                                 a.Description,
+                                                 Votes = a.Replies.Count
+                                             })
+                                .ToList()
                         });
         }
 
@@ -82,7 +61,7 @@ namespace topicr.Controllers.Api
         public IActionResult PostVote(string link, int alternative, string user)
         {
             var poll = _db.Polls
-                        .SingleOrDefault(p => p.Link.Equals(link));
+                          .SingleOrDefault(p => p.Link.Equals(link, StringComparison.Ordinal));
             if (poll == null)
             {
                 return NotFound();
@@ -93,6 +72,12 @@ namespace topicr.Controllers.Api
             {
                 return NotFound();
             }
+
+            if (HasVoted(poll.Id, user))
+            {
+                return StatusCode(StatusCodes.Status401Unauthorized, new { Message = "You've already voted in this poll." });
+            }
+
             _db.Replies.Add(new Reply
                             {
                                 AlternativeId = alt.Id,
@@ -104,31 +89,11 @@ namespace topicr.Controllers.Api
         }
 
         [HttpPost]
-        [Route("new")]
-        public IActionResult PostPoll([FromBody] Poll poll)
-        {
-            string link;
-            do
-            {
-                link = Convert.ToBase64String(Encoding.UTF8.GetBytes(Guid.NewGuid()
-                                                                         .ToString()
-                                                                         .Replace("=", "")
-                                                                         .Replace("+", "")
-                                                                         .Substring(0, 12)));
-            } while (!_db.Polls.Any(p => p.Link.Equals(link)));
-
-            poll.Link = link;
-            _db.Polls.Add(poll);
-            _db.SaveChanges();
-            return Ok();
-        }
-
-        [HttpPost]
         [Route("{link}/clear")]
         public IActionResult ClearVotes(string link)
         {
             foreach (var reply in _db.Replies
-                .Where(p => p.Alternative.Poll.Link.Equals(link)))
+                                     .Where(p => p.Alternative.Poll.Link.Equals(link, StringComparison.Ordinal)))
             {
                 _db.Replies.Remove(reply);
             }
@@ -136,5 +101,35 @@ namespace topicr.Controllers.Api
             _connectionManager.GetHubContext<PollsHub>().Clients.All.refreshPolls();
             return Ok();
         }
+
+        private bool HasVoted(int pollId, string user)
+        {
+            var pollAlternatives = _db.Alternatives
+                                      .Where(p => p.PollId == pollId)
+                                      .Select(p => p.Id)
+                                      .ToList();
+            return _db.Replies
+                      .Any(p => pollAlternatives.Contains(p.AlternativeId) && p.UserId.Equals(user, StringComparison.Ordinal));
+        }
+
+        //[HttpPost]
+        //[Route("new")]
+        //public IActionResult PostPoll([FromBody] Poll poll)
+        //{
+        //    string link;
+        //    do
+        //    {
+        //        link = Convert.ToBase64String(Encoding.UTF8.GetBytes(Guid.NewGuid()
+        //                                                                 .ToString()
+        //                                                                 .Replace("=", "")
+        //                                                                 .Replace("+", "")
+        //                                                                 .Substring(0, 12)));
+        //    } while (!_db.Polls.Any(p => p.Link.Equals(link, StringComparison.Ordinal)));
+
+        //    poll.Link = link;
+        //    _db.Polls.Add(poll);
+        //    _db.SaveChanges();
+        //    return Ok();
+        //}
     }
 }
