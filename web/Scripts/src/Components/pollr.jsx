@@ -95,11 +95,17 @@ class Pollr extends React.Component {
                     </div>
                 </div>
                 { this.state.alertMessage ? 
-                    <div className="alert alert-danger" role="alert">{this.state.alertMessage}</div>
+                    <div className="alert alert-danger alert-dismissible" role="alert">
+                        <button type="button" className="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong>Oh shoot!</strong> {this.state.alertMessage}
+                    </div>
                     : null
                 }
                 {this.state.infoMessage ?
-                    <div className="alert alert-success" role="alert">{this.state.infoMessage}</div>
+                    <div className="alert alert-success alert-dismissible" role="alert">
+                        <button type="button" className="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong>Aww yiss!</strong> {this.state.infoMessage}
+                    </div>
                     : null
                 }
                 { this.state.hasVoted ?

@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { render } from 'react-dom';
 import PropTypes from 'prop-types';
 
