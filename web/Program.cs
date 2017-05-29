@@ -1,5 +1,7 @@
-﻿using System.IO;
+using System.IO;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore;
 
 namespace topicr
 {
@@ -7,14 +9,10 @@ namespace topicr
     {
         public static void Main(string[] args)
         {
-            var host = new WebHostBuilder()
-                .UseKestrel()
-                .UseContentRoot(Directory.GetCurrentDirectory())
-                .UseIISIntegration()
+            WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
-                .Build();
-
-            host.Run();
+                .Build()
+                .Run();
         }
     }
 }

@@ -1,9 +1,8 @@
-﻿using System;
-using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using topicr.Hubs;
 using topicr.Models;
 
@@ -28,7 +27,7 @@ namespace topicr.Controllers.Api
         public IActionResult GetPoll(string link, string user)
         {
             var poll = _db.Polls
-                          .SingleOrDefault(p => p.Link.Equals(link, StringComparison.Ordinal));
+                          .SingleOrDefault(p => p.Link.Equals(link));
             if (poll == null)
             {
                 return NotFound();
@@ -61,7 +60,7 @@ namespace topicr.Controllers.Api
         public IActionResult PostVote(string link, int alternative, string user)
         {
             var poll = _db.Polls
-                          .SingleOrDefault(p => p.Link.Equals(link, StringComparison.Ordinal));
+                          .SingleOrDefault(p => p.Link.Equals(link));
             if (poll == null)
             {
                 return NotFound();
@@ -93,7 +92,7 @@ namespace topicr.Controllers.Api
         public IActionResult ClearVotes(string link)
         {
             foreach (var reply in _db.Replies
-                                     .Where(p => p.Alternative.Poll.Link.Equals(link, StringComparison.Ordinal)))
+                                     .Where(p => p.Alternative.Poll.Link.Equals(link)))
             {
                 _db.Replies.Remove(reply);
             }
@@ -109,7 +108,7 @@ namespace topicr.Controllers.Api
                                       .Select(p => p.Id)
                                       .ToList();
             return _db.Replies
-                      .Any(p => pollAlternatives.Contains(p.AlternativeId) && p.UserId.Equals(user, StringComparison.Ordinal));
+                      .Any(p => pollAlternatives.Contains(p.AlternativeId) && p.UserId.Equals(user));
         }
 
         //[HttpPost]

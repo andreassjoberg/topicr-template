@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { render } from 'react-dom';
 import PropTypes from 'prop-types';
 import Axios from 'axios';
@@ -88,7 +88,7 @@ class Pollr extends React.Component {
                 <div className="container">
                     <div className="page-header text-center">
                         <h1><a href='/'>Pollr</a></h1>
-                        Cheat sheet: MWRlYTgzMzMtMWRj
+                        Cheat sheet: mwrlytgzmzmtmwrj
                         <p>
                             <a href='javascript:void(0);' onClick={() => this.resetPollLink()}>Select another poll</a>
                         </p>
@@ -118,6 +118,6 @@ Pollr.propTypes = {
 }
 
 ReactDOM.render(
-    <Pollr url="api/polls"/>,
+    <Pollr url="/api/polls"/>,
     document.getElementById('content')
 );

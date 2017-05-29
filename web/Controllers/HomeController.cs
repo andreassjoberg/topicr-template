@@ -1,5 +1,5 @@
-﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 using topicr.Models;
 
 namespace topicr.Controllers
@@ -19,6 +19,11 @@ namespace topicr.Controllers
             {
                 ViewBag.Link = link;
             }
+            return View();
+        }
+
+        public IActionResult Error()
+        {
             return View();
         }
     }
