@@ -1,3 +1,4 @@
+@model int
 <html>
 <head>
     <title>Topicr</title>
@@ -6,7 +7,14 @@
     <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <h1>This is not the page you are looking for.</h1>
+    <div class="topicr">
+        <div class="container">
+            <div class="page-header text-center">
+                <h1><a href='/'>Topicr</a></h1>
+                <h2>This is not the page you are looking for: @Model</h2>
+            </div>
+        </div>
+    </div>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/tether/dist/js/tether.min.js"></script>

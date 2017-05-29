@@ -1,30 +1,26 @@
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
-using topicr.Models;
 
 namespace topicr.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly PollContext _db;
-
-        public HomeController(PollContext db)
+        public HomeController()
         {
-            _db = db;
         }
 
         public IActionResult Index(string link = null)
         {
-            if (!string.IsNullOrWhiteSpace(link) && _db.Polls.Any(p => p.Link.Equals(link)))
+            if (!string.IsNullOrWhiteSpace(link))
             {
                 ViewBag.Link = link;
             }
             return View();
         }
 
-        public IActionResult Error()
+        [HttpGet("/error/{statusCode}")]
+        public IActionResult Error(int statusCode)
         {
-            return View();
+            return View(statusCode);
         }
     }
 }

@@ -2,7 +2,7 @@ import React from 'react';
 import { render } from 'react-dom';
 import PropTypes from 'prop-types';
 
-class PollForm extends React.Component {
+class PollVoteForm extends React.Component {
     render() {
         const { title, description, link, alternatives } = this.props.pollData;
         if (!title || !description || !alternatives) {
@@ -30,9 +30,9 @@ class PollForm extends React.Component {
     }
 }
 
-PollForm.propTypes = {
+PollVoteForm.propTypes = {
     pollData: PropTypes.any,
     onVote: PropTypes.func
 }
 
-export default PollForm;
+export default PollVoteForm;

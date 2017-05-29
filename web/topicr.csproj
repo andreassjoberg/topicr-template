@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Scripts\src\Components\pollForm.jsx" />
+    <Content Include="Scripts\src\Components\pollVoteForm.jsx" />
     <Content Include="Scripts\src\Components\pollChart.jsx" />
     <Content Include="Scripts\src\Components\pollSelectForm.jsx" />
     <Content Include="Scripts\src\Components\pollr.jsx" />

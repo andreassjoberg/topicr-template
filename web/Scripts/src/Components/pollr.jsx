@@ -3,8 +3,8 @@ import { render } from 'react-dom';
 import PropTypes from 'prop-types';
 import Axios from 'axios';
 import Randomstring from 'randomstring';
-import PollForm from './pollForm';
 import PollSelectForm from './pollSelectForm';
+import PollVoteForm from './pollVoteForm';
 import PollChart from './pollChart';
 
 class Pollr extends React.Component {
@@ -88,7 +88,7 @@ class Pollr extends React.Component {
                 <div className="container">
                     <div className="page-header text-center">
                         <h1><a href='/'>Pollr</a></h1>
-                        Cheat sheet: mwrlytgzmzmtmwrj
+                        Cheat sheet: abcdef
                         <p>
                             <a href='javascript:void(0);' onClick={() => this.resetPollLink()}>Select another poll</a>
                         </p>
@@ -110,7 +110,7 @@ class Pollr extends React.Component {
                 }
                 { this.state.hasVoted ?
                     null : 
-                    <PollForm pollData={this.state.pollData} onVote={(link, alternativeId) => this.handleVote(link, alternativeId)} />
+                    <PollVoteForm pollData={this.state.pollData} onVote={(link, alternativeId) => this.handleVote(link, alternativeId)} />
                 }
                 <PollSelectForm isLoggedIn={this.state.isLoggedIn} onSubmit={link => this.handleSelectFormSubmit(link)}/>
                 <PollChart pollData={this.state.pollData}/>

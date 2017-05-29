@@ -50,6 +50,7 @@ namespace topicr
                 app.UseExceptionHandler("/Home/Error");
             }
 
+            app.UseStatusCodePagesWithReExecute("/error/{0}");
             app.UseStaticFiles();
 
             app.UseMvc(routes =>
