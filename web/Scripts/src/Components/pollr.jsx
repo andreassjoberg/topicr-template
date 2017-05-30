@@ -75,6 +75,7 @@ class Pollr extends React.Component {
             localStorage['userName'] = Randomstring.generate({ length: 10, charset: 'alphanumeric' });
         }
         if (sessionStorage['pollLink']) {
+            this.setState({ selectDisabled: true });
             this.loadLinkData(sessionStorage['pollLink']);
         }
     }
