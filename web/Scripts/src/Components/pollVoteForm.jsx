@@ -10,19 +10,19 @@ class PollVoteForm extends React.Component {
         }
         var pollAlternatives = alternatives.map(alternative => {
             return (
-                <p key={alternative.id}>
+                <div className="col-md-4" key={alternative.id}>
                     <a className="btn btn-info" href='javascript:void(0);' onClick={() => this.props.onVote(link, alternative.id)}>
                         {alternative.description}
                     </a>
-                </p>
+                </div>
             );
         });
 
         return (
-            <div className="row">
-                <div className="col-lg-4 form-group light-gray max-800">
-                    <h2>{title}</h2>
-                    <p>{description}</p>
+            <div className="form-group light-gray max-800">
+                <h2>{title}</h2>
+                <p>{description}</p>
+                <div className="row">
                     {pollAlternatives}
                 </div>
             </div>

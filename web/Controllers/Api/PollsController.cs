@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 using topicr.Hubs;
 using topicr.Models;
@@ -14,6 +15,7 @@ namespace topicr.Controllers.Api
     {
         private readonly PollContext _db;
         private readonly IConnectionManager _connectionManager;
+        private static Random random = new Random();
 
         public PollsController(PollContext db, IConnectionManager connectionManager)
         {
@@ -111,24 +113,36 @@ namespace topicr.Controllers.Api
                       .Any(p => pollAlternatives.Contains(p.AlternativeId) && p.UserId.Equals(user));
         }
 
-        //[HttpPost]
-        //[Route("new")]
-        //public IActionResult PostPoll([FromBody] Poll poll)
-        //{
-        //    string link;
-        //    do
-        //    {
-        //        link = Convert.ToBase64String(Encoding.UTF8.GetBytes(Guid.NewGuid()
-        //                                                                 .ToString()
-        //                                                                 .Replace("=", "")
-        //                                                                 .Replace("+", "")
-        //                                                                 .Substring(0, 12)));
-        //    } while (!_db.Polls.Any(p => p.Link.Equals(link, StringComparison.Ordinal)));
+        [HttpPost]
+        [Route("new")]
+        public IActionResult PostPoll([FromBody] Poll poll)
+        {
+            if (string.IsNullOrWhiteSpace(poll.Title) ||
+                string.IsNullOrWhiteSpace(poll.Description) ||
+                poll.Alternatives == null ||
+                poll.Alternatives.Count == 0 ||
+                !poll.Alternatives.Any(p => !string.IsNullOrWhiteSpace(p.Description)))
+            {
+                return StatusCode(StatusCodes.Status406NotAcceptable);
+            }
 
-        //    poll.Link = link;
-        //    _db.Polls.Add(poll);
-        //    _db.SaveChanges();
-        //    return Ok();
-        //}
+            poll.Alternatives = poll.Alternatives
+                                    .Where(p => !string.IsNullOrWhiteSpace(p.Description))
+                                    .ToList();
+
+            string link;
+            do
+            {
+                const string chars = "abcdefghijklmnopqrstuvwxyz";
+                link = new string(Enumerable.Repeat(chars, 6)
+                                            .Select(s => s[random.Next(s.Length)])
+                                            .ToArray());
+            } while (_db.Polls.Any(p => p.Link.Equals(link)));
+
+            poll.Link = link;
+            _db.Polls.Add(poll);
+            _db.SaveChanges();
+            return Json(new { link = link });
+        }
     }
 }

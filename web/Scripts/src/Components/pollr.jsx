@@ -90,7 +90,8 @@ class Pollr extends React.Component {
                         <h1><a href='/'>Pollr</a></h1>
                         Cheat sheet: abcdef
                         <p>
-                            <a href='javascript:void(0);' onClick={() => this.resetPollLink()}>Select another poll</a>
+                            <a href='javascript:void(0);' onClick={() => this.resetPollLink()}>Select another poll</a><br />
+                            <a href='/new'>Create a new poll</a>
                         </p>
                     </div>
                 </div>

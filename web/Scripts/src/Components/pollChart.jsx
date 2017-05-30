@@ -1,11 +1,11 @@
-﻿import React from 'react';
+import React from 'react';
 import { render } from 'react-dom';
 import PropTypes from 'prop-types';
 import { Pie } from 'react-chartjs-2';
 
 class PollChart extends React.Component {
     render() {
-        const { alternatives } = this.props.pollData;
+        const { title, description, alternatives } = this.props.pollData;
         if (!alternatives) {
             return null;
         }
@@ -22,20 +22,28 @@ class PollChart extends React.Component {
                 {
                     data: data,
                     backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(255, 159, 64, 0.2)'
+                        'rgba(146, 43, 33, 0.2)',
+                        'rgba(36, 113, 163, 0.2)',
+                        'rgba(183, 149, 11, 0.2)',
+                        'rgba(160, 64, 0, 0.2)',
+                        'rgba(179, 182, 183, 0.2)',
+                        'rgba(20, 143, 119, 0.2)',
+                        'rgba(97, 106, 107, 0.2)',
+                        'rgba(118, 68, 138, 0.2)',
+                        'rgba(46, 64, 83, 0.2)',
+                        'rgba(175, 96, 26, 0.2)'
                     ],
                     borderColor: [
-                        'rgba(255,99,132,1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)'
+                        'rgba(146, 43, 33, .8)',
+                        'rgba(36, 113, 163, .8)',
+                        'rgba(183, 149, 11, .8)',
+                        'rgba(160, 64, 0, .8)',
+                        'rgba(179, 182, 183, .8)',
+                        'rgba(20, 143, 119, .8)',
+                        'rgba(97, 106, 107, .8)',
+                        'rgba(118, 68, 138, .8)',
+                        'rgba(46, 64, 83, .8)',
+                        'rgba(175, 96, 26, .8)'
                     ]
                 }
             ]
@@ -46,6 +54,10 @@ class PollChart extends React.Component {
         return (
             <div className="row">
                 <div className="col-lg-4 form-group max-800">
+                    <h2>{title}</h2>
+                    <p>
+                        {description}
+                    </p>
                     <Pie data={chartData} options={chartOptions} />
                 </div>
             </div>

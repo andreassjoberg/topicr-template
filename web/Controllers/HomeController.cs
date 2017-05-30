@@ -22,5 +22,11 @@ namespace topicr.Controllers
         {
             return View(statusCode);
         }
+
+        [Route("/new")]
+        public IActionResult New()
+        {
+            return View();
+        }
     }
 }

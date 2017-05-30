@@ -1,0 +1,90 @@
+@model topicr.Models.Poll
+<html>
+<head>
+    <title>Topicr</title>
+    <link href="~/css/site.min.css" rel="stylesheet">
+    <link href="~/lib/tether/dist/css/tether.min.css" rel="stylesheet">
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/tether/dist/js/tether.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <div class="topicr">
+        <div class="container">
+            <div class="page-header text-center">
+                <h1><a href='/'>Topicr</a></h1>
+
+                <div id="warning" class="alert alert-danger alert-dismissible" role="alert" style="display:none">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>Oh shoot!</strong> <span id="warning-message"></span>
+                </div>
+
+                <div id="success" class="alert alert-success" role="alert" style="display:none">
+                    <strong>Aww yiss!</strong> <span id="success-message"></span>
+                </div>
+
+                @using (Html.BeginForm("", "", FormMethod.Post, new { @id = "newpollform", @class = "form-group light-gray max-800" }))
+                {
+                    <h2>New poll</h2>
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1">Title</span>
+                        <input name="title" class="form-control" type="text" placeholder="Title..." autofocus />
+                    </div>
+
+                    <div class="input-group">
+                        <textarea name="description" class="form-control" placeholder="Description..."></textarea>
+                    </div>
+
+                    @for (var i = 0; i < 10; ++i)
+                    {
+                        <div class="input-group">
+                            <span class="input-group-addon" id="basic-addon1">Answer</span>
+                            <input name="alternative" class="form-control" type="text" placeholder="Answer..." />
+                        </div>
+                    }
+
+                    <div class="input-group">
+                        <button class="btn btn-lg btn-primary" type="submit">Create poll</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $('form').submit(event => {
+            event.preventDefault();
+
+            var alternatives = [];
+            $('input[name="alternative"]').each((index, elem) => {
+                alternatives.push({ description: $.trim($(elem).val()) });
+            });
+            var data = {
+                title: $.trim($('input[name="title"]').val()),
+                description: $.trim($('textarea[name="description"]').val()),
+                alternatives: alternatives
+            };
+
+            $.post({
+                url: '/api/polls/new',
+                data: JSON.stringify(data),
+                contentType: 'application/json',
+                dataType: 'json'
+            })
+                .done(data => {
+                    console.log(data);
+                    $('#success-message').html('You posted a poll!' + ' Link: <a href="/p/' + data.link + '">' + data.link + '</a>');
+                    $('#success').show();
+                    $('form').hide();
+                })
+                .fail(() => {
+                    $('#warning-message').text('Something went wrong!');
+                    $('#warning').show();
+                });
+
+        });
+    </script>
+</body>
+</html>

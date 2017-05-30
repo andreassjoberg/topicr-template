@@ -1,4 +1,4 @@
-﻿body {
+body {
     padding: 40px 10px 20px;
 }
 
@@ -21,6 +21,10 @@ textarea {
     padding: 20px;
     margin: 30px auto 0;
     text-align: center;
+}
+
+.input-group {
+    margin: 5px;
 }
 
 .light-gray {
