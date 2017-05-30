@@ -88,7 +88,6 @@ class Pollr extends React.Component {
                 <div className="container">
                     <div className="page-header text-center">
                         <h1><a href='/'>Pollr</a></h1>
-                        Cheat sheet: abcdef
                         <p>
                             <a href='javascript:void(0);' onClick={() => this.resetPollLink()}>Select another poll</a><br />
                             <a href='/new'>Create a new poll</a>

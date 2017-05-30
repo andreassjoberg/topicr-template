@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 import PropTypes from 'prop-types';
-import { Pie } from 'react-chartjs-2';
+import { Bar } from 'react-chartjs-2';
 
 class PollChart extends React.Component {
     render() {
@@ -16,11 +16,14 @@ class PollChart extends React.Component {
         var labels = alternatives.map(alternative => {
             return alternative.description;
         });
+
         var chartData = {
             labels: labels,
             datasets: [
                 {
+                    label: title,
                     data: data,
+                    borderWidth: 2,
                     backgroundColor: [
                         'rgba(146, 43, 33, 0.2)',
                         'rgba(36, 113, 163, 0.2)',
@@ -49,6 +52,14 @@ class PollChart extends React.Component {
             ]
         };
         var chartOptions = {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        min: 0,
+                        stepSize: 1
+                    }
+                }]
+            }
         };
 
         return (
@@ -58,7 +69,7 @@ class PollChart extends React.Component {
                     <p>
                         {description}
                     </p>
-                    <Pie data={chartData} options={chartOptions} />
+                    <Bar data={chartData} options={chartOptions} />
                 </div>
             </div>
         );
