@@ -53,10 +53,15 @@ class PollChart extends React.Component {
         };
         var chartOptions = {
             scales: {
+                xAxes: [{
+                    gridLines: {
+                        display: false
+                    }
+                }],
                 yAxes: [{
+                    display: false,
                     ticks: {
-                        min: 0,
-                        stepSize: 1
+                        min: 0
                     }
                 }]
             }
@@ -64,7 +69,7 @@ class PollChart extends React.Component {
 
         return (
             <div className="row">
-                <div className="col-lg-4 form-group max-800">
+                <div className="col-lg-4 form-group form-padding max-800">
                     <h2>{title}</h2>
                     <p>
                         {description}

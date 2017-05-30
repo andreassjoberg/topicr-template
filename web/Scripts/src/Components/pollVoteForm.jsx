@@ -17,13 +17,19 @@ class PollVoteForm extends React.Component {
                 </div>
             );
         });
+        const coverStyle = { display: this.props.disabled ? 'block' : 'none' };
 
         return (
             <div className="form-group light-gray max-800">
-                <h2>{title}</h2>
-                <p>{description}</p>
-                <div className="row">
-                    {pollAlternatives}
+                <div className="cover" style={coverStyle}>
+                    <div className="loader"></div>
+                </div>
+                <div className="form-padding">
+                    <h2>{title}</h2>
+                    <p>{description}</p>
+                    <div className="row">
+                        {pollAlternatives}
+                    </div>
                 </div>
             </div>
         );
@@ -32,7 +38,8 @@ class PollVoteForm extends React.Component {
 
 PollVoteForm.propTypes = {
     pollData: PropTypes.any,
-    onVote: PropTypes.func
+    onVote: PropTypes.func,
+    disabled: PropTypes.bool
 }
 
 export default PollVoteForm;

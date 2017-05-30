@@ -16,7 +16,9 @@ class Pollr extends React.Component {
             pollData: {},
             alertMessage: '',
             infoMessage: '',
-            hasVoted: false
+            hasVoted: false,
+            selectDisabled: false,
+            voteDisabled: false
         };
     }
 
@@ -29,14 +31,15 @@ class Pollr extends React.Component {
         Axios.get(this.props.url + '/' + link + '/user/' + userName)
             .then(response => {
                 sessionStorage['pollLink'] = link;
-                this.setState({ isLoggedIn: true, pollData: response.data, hasVoted: response.data.hasVoted });
+                this.setState({ isLoggedIn: true, pollData: response.data, hasVoted: response.data.hasVoted, selectDisabled: false });
             })
             .catch(() => {
-                this.setState({ alertMessage: 'No poll found for given link.' });
+                this.setState({ alertMessage: 'No poll found for given link.', selectDisabled: false });
             });
     }
 
     handleSelectFormSubmit(link) {
+        this.setState({ selectDisabled: true });
         this.loadLinkData(link);
     }
 
@@ -45,13 +48,15 @@ class Pollr extends React.Component {
             console.error('No username set!');
             return;
         }
+        this.setState({ voteDisabled: true });
         var userName = localStorage['userName'];
         Axios.post(this.props.url + '/' + link + '/vote/' + alternativeId + '/user/' + userName)
             .then(() => {
-                this.setState({ infoMessage: 'Thanks for your vote!' });
+                this.setState({ infoMessage: 'Thanks for your vote!', voteDisabled: false });
                 this.loadLinkData(link);
             })
             .catch(error => {
+                this.setState({ voteDisabled: false });
                 if (error.response.status === 401) {
                     this.setState({ alertMessage: error.response.data.message });
                 } else {
@@ -110,9 +115,9 @@ class Pollr extends React.Component {
                 }
                 { this.state.hasVoted ?
                     null : 
-                    <PollVoteForm pollData={this.state.pollData} onVote={(link, alternativeId) => this.handleVote(link, alternativeId)} />
+                    <PollVoteForm pollData={this.state.pollData} onVote={(link, alternativeId) => this.handleVote(link, alternativeId)} disabled={this.state.voteDisabled} />
                 }
-                <PollSelectForm isLoggedIn={this.state.isLoggedIn} onSubmit={link => this.handleSelectFormSubmit(link)}/>
+                <PollSelectForm isLoggedIn={this.state.isLoggedIn} onSubmit={link => this.handleSelectFormSubmit(link)} disabled={this.state.selectDisabled}/>
                 <PollChart pollData={this.state.pollData}/>
             </div>
         );

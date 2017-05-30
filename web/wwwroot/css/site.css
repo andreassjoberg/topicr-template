@@ -1,4 +1,4 @@
-body {
+﻿body {
     padding: 40px 10px 20px;
 }
 
@@ -18,9 +18,13 @@ textarea {
 }
 
 .form-group {
-    padding: 20px;
+    position: relative;
     margin: 30px auto 0;
     text-align: center;
+}
+
+.form-padding {
+    padding: 20px;
 }
 
 .input-group {
@@ -43,10 +47,41 @@ textarea {
     margin-top: 5px;
 }
 
+.cover {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    z-index: 1;
+    background-color: #000;
+    opacity: 0.5;
+}
+
+.loader {
+    border: 8px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 8px solid #3498db;
+    width: 40px;
+    height: 40px;
+    -webkit-animation: spin .5s linear infinite;
+    animation: spin .5s linear infinite;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+}
+
+@-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
 /* Hide/rearrange for smaller screens */
 @media screen and (max-width: 767px) {
-    /* Hide captions */
-    .carousel-caption {
-        display: none;
-    }
 }
