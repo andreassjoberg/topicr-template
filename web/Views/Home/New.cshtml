@@ -1,3 +1,4 @@
+@using Microsoft.AspNetCore.Mvc.Rendering
 @model topicr.Models.Poll
 <html>
 <head>
@@ -5,6 +6,7 @@
     <link href="~/css/site.min.css" rel="stylesheet">
     <link href="~/lib/tether/dist/css/tether.min.css" rel="stylesheet">
     <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/favicon.ico" rel="icon" type="/image/vnd.microsoft.icon">
 </head>
 <body>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
@@ -37,7 +39,7 @@
                         <textarea name="description" class="form-control" placeholder="Description..."></textarea>
                     </div>
 
-                    @for (var i = 0; i < 10; ++i)
+                    for (var i = 0; i < 10; ++i)
                     {
                         <div class="input-group">
                             <span class="input-group-addon" id="basic-addon1">Answer</span>
