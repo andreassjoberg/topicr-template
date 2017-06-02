@@ -114,11 +114,8 @@ class Pollr extends React.Component {
                     </div>
                     : null
                 }
-                { this.state.hasVoted ?
-                    null : 
-                    <PollVoteForm pollData={this.state.pollData} onVote={(link, alternativeId) => this.handleVote(link, alternativeId)} disabled={this.state.voteDisabled} />
-                }
-                <PollSelectForm isLoggedIn={this.state.isLoggedIn} onSubmit={link => this.handleSelectFormSubmit(link)} disabled={this.state.selectDisabled}/>
+                <PollSelectForm isLoggedIn={this.state.isLoggedIn} onSubmit={link => this.handleSelectFormSubmit(link)} disabled={this.state.selectDisabled} />
+                <PollVoteForm pollData={this.state.pollData} onVote={(link, alternativeId) => this.handleVote(link, alternativeId)} disabled={this.state.voteDisabled} hasVoted={this.state.hasVoted} />
                 <PollChart pollData={this.state.pollData}/>
             </div>
         );

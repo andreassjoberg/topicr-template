@@ -3,6 +3,12 @@ import { render } from 'react-dom';
 import PropTypes from 'prop-types';
 
 class PollVoteForm extends React.Component {
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.hasVoted !== this.props.hasVoted && nextProps.hasVoted) {
+            setTimeout(() => { $('#voteForm').fadeOut('slow'); }, 500);
+        }
+    }
+
     render() {
         const { title, description, link, alternatives } = this.props.pollData;
         if (!title || !description || !alternatives) {
@@ -20,7 +26,7 @@ class PollVoteForm extends React.Component {
         const coverStyle = { display: this.props.disabled ? 'block' : 'none' };
 
         return (
-            <div className="form-group light-gray max-800">
+            <div id="voteForm" className="form-group light-gray max-800">
                 <div className="cover" style={coverStyle}>
                     <div className="loader"></div>
                 </div>
@@ -39,7 +45,8 @@ class PollVoteForm extends React.Component {
 PollVoteForm.propTypes = {
     pollData: PropTypes.any,
     onVote: PropTypes.func,
-    disabled: PropTypes.bool
+    disabled: PropTypes.bool,
+    hasVoted: PropTypes.bool
 }
 
 export default PollVoteForm;

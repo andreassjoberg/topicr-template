@@ -22,15 +22,17 @@ class PollSelectForm extends React.Component {
         this.props.onSubmit(link);
     }
 
-    render() {
-        const isLoggedIn = this.props.isLoggedIn;
-        if (isLoggedIn) {
-            return null;
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.isLoggedIn !== this.props.isLoggedIn && nextProps.isLoggedIn) {
+            $('#selectForm').fadeOut('slow');
         }
+    }
+
+    render() {
         const coverStyle = { display: this.props.disabled ? 'block' : 'none' };
 
         return (
-            <div className="form-group light-gray max-400">
+            <div id="selectForm" className="form-group light-gray max-400">
                 <div className="cover" style={coverStyle}>
                     <div className="loader"></div>
                 </div>
