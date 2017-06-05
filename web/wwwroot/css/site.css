@@ -17,6 +17,10 @@ textarea {
     max-width: auto;
 }
 
+p {
+    white-space: pre-wrap;
+}
+
 .form-group {
     position: relative;
     margin: 30px auto 0;
